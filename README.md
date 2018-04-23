@@ -142,10 +142,31 @@ $function => 為一閉包函式，應接收一陣列參數，會包含查詢結�
 
 即可將符合時間條件與tag條件之資料做修改
     
-#### Artisan 指令集
+## 回傳格式
+
+function會自動執行閉包函式，並將查詢結果之id陣列以參數傳入<br>
+當執行發生錯誤時，回傳格式如下：
+
+    array(
+        'ok'   => 'false',     // 代表發生錯誤
+        'msg'  => 'error msg', // 錯誤訊息，比如參數錯誤 
+        'data' => array()      // 查詢結果之id陣列
+    )
+
+可以以
+
+    if( $returnArray['ok'] != 'true' ){
+        // error
+    }else{
+        // right
+    }
+    
+來做錯誤判斷。
+    
+## Artisan 指令集
 =
 (規劃中)
 
-#### 配合Laravel排程使用
+## 配合Laravel排程使用
 =
 (規劃中)
