@@ -87,7 +87,7 @@ class TimeIntervalSelect
         $now = $datetime= date("Y-m-d H:i:s");
 
         /* 基本select */
-        $sql_string = "SELECT {$pk} FROM {$tableName} WHERE {$start_at} < '{$now}'";
+        $sql_string = "SELECT {$pk} FROM {$tableName} WHERE {$start_at} > '{$now}'";
         /* 加入tag限制 */
         foreach($tag as $key => $item){
             if(is_array($item)){
