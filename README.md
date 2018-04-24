@@ -30,9 +30,9 @@
     id=1 的與神同行的 "status" 應該被更新為"已下檔"
     id=3 的明天過後的 "status" 應該被更新為"上映中"
     
-    這個 package 的功能就是為你找出那些*應該被更新的 row id*
+    這個 package 的功能就是為你找出那些 "應該被更新的 row id"
     你可以依據不同的輸入來做限制，類似的使用有文章定時發佈與隱藏等...
-    再配合 Laravel 的排程使用，便可以使程式依自已所需要的頻率，*定期的自動更新維護 table 資訊*
+    再配合 Laravel 的排程使用，便可以使程式依自已所需要的頻率，"定期的自動更新維護 table 資訊"
 
 ## 安裝
 因為此套件是公開版控庫，但是因為沒有上傳至 packgist，如果要安裝此 package 的專案，必需在自己的 composer.json 先定義版控庫來源
@@ -64,7 +64,7 @@
 
 	$tableName => 欲查詢的table名稱，以上例就是"movies"
 
-	$tag => Array，欲做比對的欄位與其值，以movis為例 => ['status' => '上映中']`
+	$tag => Array，欲做比對的欄位與其值，以movis為例 => ['status' => '上映中']
 	['status' => ['上映中', '已下檔']]` // 相當於 `status != "上映中" && status != "已下檔"
 
 	$columnName => Array，存入table中的column欄位名稱，實際格式如下
@@ -73,16 +73,15 @@
 	'end_at'     => 'table中記錄判斷結束時間的欄位名稱'
 	]`
 其中：<br>
-checkBefore 可不傳入 end_at<br>
-checkAfter 可不傳入 start_at<br>
-**checkNow 則兩者皆必須傳入**
+**checkBefore 可不傳入 end_at**<br>
+**checkAfter 可不傳入 start_at**<br>
+**checkNow 則start_at與end_at皆必須傳入**
 
-$function => **為一閉包函式，應接收一陣列參數，會包含查詢結果，可執行使用者想做之事**
+$function => **為一閉包函式，應接收一陣列參數，會包含查詢結果，可執行使用者想做之事，比如更新欄位**
 
 以下為以 movies 為使用案例的程式
 
 #### checkBefore
-
 
     TimeIntervalSelect::checkBefore("movies",
     ['status' => '未上映'], 
@@ -91,13 +90,11 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
 
 在 function 結束時，程式會自動將查詢結果帶入閉包函式執行，回傳結果如下：
 
-    array(); // 以上表movies為例，無欄位應該做修改
+    array(); // 以上表 movies 為例，無欄位應該做修改
 
-使用者應在閉包函式做欲做之事，如將 status 欄位修改為「未上映」，以 Laravel ORM為例
+使用者應在閉包函式做欲做之事，如將 status 欄位修改為「未上映」，以 Laravel ORM 為例
 
     Movies::whereIn('id', $array)->update['status'=>'未上映'];
-
-即可將符合時間條件與 tag 條件之資料做修改
 
 #### checkNow
 
@@ -109,14 +106,11 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
 在 function 結束時，程式會自動將查詢結果帶入閉包函式執行<br>
 回傳結果如：
 
-    array(3); // 以上表movies為例，id=3 之資料應該被修改
+    array(3); // 以上表 movies 為例，id=3 之資料應該被修改
 
-使用者應在閉包函式做欲做之事，如將 status 欄位修改為「上映中」，以 Laravel ORM為例
+使用者應在閉包函式做欲做之事，如將 status 欄位修改為「上映中」，以 Laravel ORM 為例
 
     Movies::whereIn('id', $array)->update['status'=>'上映中'];
-
-即可將符合時間條件與 tag 條件之資料做修改
-
     
 #### checkAfter
 
@@ -128,13 +122,11 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
 在 function 結束時，程式會自動將查詢結果帶入閉包函式執行<br>
 回傳結果如：
 
-    array(1); // 以上表movies為例，id=3 之資料應該做修改
+    array(1); // 以上表 movies 為例，id=3 之資料應該做修改
 
 使用者應在閉包函式做欲做之事，如將 status 欄位修改為「上映中」，以 Laravel ORM 為例
 
     Movies::whereIn('id', $array)->update['status'=>'已下檔'];
-
-即可將符合時間條件與 tag 條件之資料做修改
     
 ## 回傳格式
 
