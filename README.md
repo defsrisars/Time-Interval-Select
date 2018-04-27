@@ -52,6 +52,13 @@
 
     composer require ariby/Time-Interval-Select
     
+並在config/app.php加上Provider
+
+    'providers' => [
+        ...
+        ariby\TimeIntervalSelect\TimeIntervalServiceProvider::class,
+    ],    
+    
 然後在要使用的地方上方，加上下方程式碼做 include
 
 	use ariby\TimeIntervalSelect\TimeIntervalSelect;
@@ -147,7 +154,25 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
         // right
     }
     
+## 使用Artisan命令列做查詢
 
+在config/app.php加上服務提供者後，可直接以php artisan使用
+
+    \\ php artisan可看到
+    TimeSelect:getIDs    {tableName : The name of table.}
+                           {method : 1:before, 2:now, 3:after}
+                           {primaryKey : The column you want to return after search.}
+                           {beforeTimeKey : The column name in the database.}
+                           {afterTimeKey : The column name in the database.}
+                           {tagArray* : The rule that you want to set. The first parameter is key, and after is value. e.g. send "status false tag error" means ["staus" => "false", "tag" => "error"]}
+    
+以下為使用範例：
+    
+    // 輸入指令
+    php artisan TimeSelect:getIDs movies 2 id startTime endTime status 未上映
+    // 回傳Number為滿足條件的row數量、result為滿足的id們，以" ,"為分隔符
+    Number: 1
+    result: 3
     
 ## 配合Laravel排程使用
 可以參考 [Laravel 官方文件](https://docs.laravel-dojo.com/laravel/5.5/scheduling)<br>
