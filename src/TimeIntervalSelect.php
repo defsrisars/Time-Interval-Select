@@ -1,23 +1,12 @@
 <?php
 
-namespace ariby\TimeIntervalSelect;
+namespace Ariby\TimeIntervalSelect;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Symfony\Component\Console\Output\ConsoleOutput;
 
-/**
- * 遊戲站錢包管理（服務）器，提供方法執行錢包相關操作，餘額操作需套用交易模式
- */
 class TimeIntervalSelect
 {
-    /**
-     * 遊戲站連結器集合
-     *
-     * @var array
-     */
-    protected $connectors = [];
-
     /**
      * constructor.
      */
@@ -83,7 +72,6 @@ class TimeIntervalSelect
         /* set */
         $pk  = $columnName['primaryKey'];
         $start_at = $columnName['start_at'];
-        date_default_timezone_set('Asia/Taipei');
         $now = $datetime= date("Y-m-d H:i:s");
 
         /* 基本select */
@@ -118,7 +106,7 @@ class TimeIntervalSelect
      * @param $function
      * @return array
      */
-    public static function checkNow($tableName, $tag = [], $columnName = ['primaryKey' => 'id', 'start_at' => 'start_at', 'end_at' => 'end_at'], $function)
+    public static function checkBetween($tableName, $tag = [], $columnName = ['primaryKey' => 'id', 'start_at' => 'start_at', 'end_at' => 'end_at'], $function)
     {
         /* check Input != null */
         if(is_null($tableName)){
@@ -170,8 +158,7 @@ class TimeIntervalSelect
         $pk  = $columnName['primaryKey'];
         $start_at = $columnName['start_at'];
         $end_at = $columnName['end_at'];
-        date_default_timezone_set('Asia/Taipei');
-        $now = $datetime= date("Y-m-d H:i:s");
+        $now = $datetime= date("Y-m-d H:i:59");
 
         /* 基本select */
         $sql_string = "SELECT {$pk} FROM {$tableName} WHERE {$start_at} < '{$now}' AND {$end_at} > '{$now}'";
@@ -250,7 +237,6 @@ class TimeIntervalSelect
         /* set */
         $pk  = $columnName['primaryKey'];
         $end_at = $columnName['end_at'];
-        date_default_timezone_set('Asia/Taipei');
         $now = $datetime= date("Y-m-d H:i:s");
 
         /* 基本select */

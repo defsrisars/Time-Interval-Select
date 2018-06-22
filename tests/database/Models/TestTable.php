@@ -1,6 +1,6 @@
 <?php
 
-namespace ariby\TimeIntervalSelect\Models;
+namespace Ariby\TimeIntervalSelect\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

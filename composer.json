@@ -22,16 +22,25 @@
   },
   "autoload": {
     "psr-4": {
-      "ariby\\TimeIntervalSelect\\": "src/"
+      "Ariby\\TimeIntervalSelect\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "ariby\\tests\\": "tests/"
+      "Ariby\\tests\\": "tests/"
     },
     "classmap": [
       "tests/"
     ]
   },
-  "minimum-stability": "stable"
+  "minimum-stability": "stable",
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Ariby\\TimeIntervalSelect\\TimeIntervalServiceProvider"
+      ],
+      "aliases": {
+      }
+    }
+  }
 }

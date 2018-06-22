@@ -1,15 +1,12 @@
 <?php
 
-namespace ariby\TimeIntervalSelect;
+namespace Ariby\TimeIntervalSelect;
 
 use Illuminate\Support\ServiceProvider;
+use Ariby\TimeIntervalSelect\Commands\GetSatisfyIDs;
 
 class TimeIntervalServiceProvider extends ServiceProvider
 {
-    protected $commands = [
-        Commands\GetIDs::class,
-    ];
-
     /**
      * Bootstrap any application services.
      *
@@ -17,7 +14,14 @@ class TimeIntervalServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        if ($this->app->runningInConsole()) {
+            // 執行所有套件 migrations
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+            // 註冊所有 commands
+            $this->commands([
+                GetSatisfyIDs::class
+            ]);
+        }
     }
 
     /**
@@ -27,7 +31,8 @@ class TimeIntervalServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->commands($this->commands);
-        //
+        $this->commands([
+
+        ]);
     }
 }

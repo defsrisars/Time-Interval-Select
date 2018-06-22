@@ -50,24 +50,23 @@
 
 接著就可以透過下列指令進行安裝
 
-    composer require ariby/Time-Interval-Select
+    composer require Ariby/Time-Interval-Select
     
 並在config/app.php加上Provider
 
     'providers' => [
         ...
-        ariby\TimeIntervalSelect\TimeIntervalServiceProvider::class,
+        Ariby\TimeIntervalSelect\TimeIntervalServiceProvider::class,
     ],    
     
 然後在要使用的地方上方，加上下方程式碼做 include
 
-	use ariby\TimeIntervalSelect\TimeIntervalSelect;
-
+	use Ariby\TimeIntervalSelect\TimeIntervalSelect;
 
 ## 使用方法
 
 目前的 Method 一共有 3 個，以查詢的時間來做區分<br>
-分別是 checkBefore、checkNow、checkAfter 且都必須傳入四個參數，依序分別是：<br>
+分別是 checkBefore、checkBetween、checkAfter 且都必須傳入四個參數，依序分別是：<br>
 
 	$tableName => 欲查詢的table名稱，以上例就是"movies"
 
@@ -82,7 +81,7 @@
 其中：<br>
 **checkBefore 可不傳入 end_at**<br>
 **checkAfter 可不傳入 start_at**<br>
-**checkNow 則start_at與end_at皆必須傳入**
+**checkBetween 則start_at與end_at皆必須傳入**
 
 $function => **為一閉包函式，應接收一陣列參數，會包含查詢結果，可執行使用者想做之事，比如更新欄位**
 
@@ -103,9 +102,9 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
 
     Movies::whereIn('id', $array)->update['status'=>'未上映'];
 
-#### checkNow
+#### checkBetween
 
-    $result = TimeIntervalSelect::checkNow("movies",
+    $result = TimeIntervalSelect::checkBetween("movies",
     ['status' => '上映中'], 
     array('primaryKey'=>'id', 'start_at'=>'startTime', 'end_at' => 'endTime'),
     function($array){ ...do something what you want to do });
@@ -154,12 +153,32 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
         // right
     }
     
+## 擴充案例
+
+若你的案例可能會有「沒有預定結束時間」的狀況 (即 end_at === null)，且你使用的是 Laravel 專案，可以在 Model 加上以下程式碼：
+
+    public function setPublishEndAtAttribute($publish_end_at){
+        if(is_null($publish_end_at)){
+            $this->attributes['publish_end_at'] = '9999-12-31 23:59:59';
+        }else{
+            $this->attributes['publish_end_at'] = $publish_end_at;
+        }
+    }
+
+    public function getPublishEndAtAttribute($publish_end_at){
+        if($publish_end_at == '9999-12-31 23:59:59'){
+            return null;
+        }else{
+            return $publish_end_at;
+        }
+    }
+    
 ## 使用Artisan命令列做查詢
 
 在config/app.php加上服務提供者後，可直接以php artisan使用
 
     \\ php artisan可看到
-    TimeSelect:getIDs    {tableName : The name of table.}
+    TimeSelect:getSatisfyIDs    {tableName : The name of table.}
                            {method : 1:before, 2:now, 3:after}
                            {primaryKey : The column you want to return after search.}
                            {beforeTimeKey : The column name in the database.}
@@ -169,7 +188,7 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
 以下為使用範例：
     
     // 輸入指令
-    php artisan TimeSelect:getIDs movies 2 id startTime endTime status 未上映
+    php artisan TimeSelect:getSatisfyIDs movies 2 id startTime endTime status 未上映
     // 回傳Number為滿足條件的row數量、result為滿足的id們，以" ,"為分隔符
     Number: 1
     result: 3
@@ -203,8 +222,8 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
     
     use Illuminate\Console\Command;
     
-    use App\Model\Movies;
-    use ariby\TimeIntervalSelect\TimeIntervalSelect;
+    use App\Models\Movies;
+    use Ariby\TimeIntervalSelect\TimeIntervalSelect;
     
     class UpdateMoviesStatus extends Command
     {
@@ -229,7 +248,7 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
             });
     
             /* now-檢查上映中的電影並更新 */
-            TimeIntervalSelect::checkNow("movies",['status' => '上映中'], array('primaryKey'=>'id', 'start_at'=>'startTime', 'end_at'=>'endTime'), function($array){
+            TimeIntervalSelect::checkBetween("movies",['status' => '上映中'], array('primaryKey'=>'id', 'start_at'=>'startTime', 'end_at'=>'endTime'), function($array){
                 if(!is_null($array))
                     Movies::whereIn('id', $array)->update(['status' => '上映中', 'stage' => 'Now']);
             });

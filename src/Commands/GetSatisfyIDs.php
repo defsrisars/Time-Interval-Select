@@ -1,22 +1,26 @@
 <?php
 
-namespace ariby\TimeIntervalSelect\Commands;
+namespace Ariby\TimeIntervalSelect\Commands;
 
 use Illuminate\Console\Command;
-use ariby\TimeIntervalSelect\TimeIntervalSelect;
+use Ariby\TimeIntervalSelect\TimeIntervalSelect;
 
-class GetIDs extends Command
+class GetSatisfyIDs extends Command
 {
     // 命令名稱
-    protected $signature = 'TimeSelect:getIDs {tableName} {method} {primaryKey} {beforeTimeKey} {afterTimeKey} {tagArray*}';
+    protected $signature = 'TimeSelect:get-satisfy-ids {tableName} {method} {primaryKey} {beforeTimeKey} {afterTimeKey} {tagArray*}';
 
     // 說明文字
-    protected $description = '{tableName : The name of table.}
-                       {method : 1:before, 2:now, 3:after}
-                       {primaryKey : The column you want to return after search.}
-                       {beforeTimeKey : The column name in the database.}
-                       {afterTimeKey : The column name in the database.}
-                       {tagArray* : The rule that you want to set. The first parameter is key, and after is value. e.g. send "status false tag error" means ["staus" => "false", "tag" => "error"]}';
+    protected $description =
+        '參數說明如下：'."\n".
+        '{tableName : The name of table in the database.}'."\n".
+        '{method : 1:before, 2:between, 3:after}'."\n".
+        '{primaryKey : The column you want to return after search.}'."\n".
+        '{beforeTimeKey : The column name in the database.}'."\n".
+        '{afterTimeKey : The column name in the database.}'."\n".
+        '{beforeTimeKey : The column name in the database.}'."\n".
+        '{afterTimeKey : The column name in the database.}'."\n".
+        '{tagArray* : The rule that you want to set. The first parameter is key, and after is value. e.g. send "status false tag error" means ["staus" => "false", "tag" => "error"]}';
 
     public function __construct()
     {
@@ -45,7 +49,7 @@ class GetIDs extends Command
                 $result = TimeIntervalSelect::checkBefore($tableName,$tagArray, $keyArray, function(){});
                 break;
             case '2':
-                $result = TimeIntervalSelect::checkNow($tableName,$tagArray, $keyArray, function(){});
+                $result = TimeIntervalSelect::checkBetween($tableName,$tagArray, $keyArray, function(){});
                 break;
             case '3':
                 $result = TimeIntervalSelect::checkAfter($tableName,$tagArray, $keyArray, function(){});
