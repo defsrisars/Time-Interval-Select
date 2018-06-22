@@ -1,14 +1,14 @@
 <?php
 
-namespace Ariby\TimeIntervalSelect\Commands;
+namespace Ariby\UpdateStatusByTime\Commands;
 
 use Illuminate\Console\Command;
-use Ariby\TimeIntervalSelect\TimeIntervalSelect;
+use Ariby\UpdateStatusByTime\UpdateStatusByTime;
 
 class GetSatisfyIDs extends Command
 {
     // 命令名稱
-    protected $signature = 'TimeSelect:get-satisfy-ids {tableName} {method} {primaryKey} {beforeTimeKey} {afterTimeKey} {tagArray*}';
+    protected $signature = 'UpdateStatusByTime:get-satisfy-ids {tableName} {method} {primaryKey} {beforeTimeKey} {afterTimeKey} {tagArray*}';
 
     // 說明文字
     protected $description =
@@ -46,13 +46,13 @@ class GetSatisfyIDs extends Command
 
         switch($method){
             case '1':
-                $result = TimeIntervalSelect::checkBefore($tableName,$tagArray, $keyArray, function(){});
+                $result = UpdateStatusByTime::checkBefore($tableName,$tagArray, $keyArray, function(){});
                 break;
             case '2':
-                $result = TimeIntervalSelect::checkBetween($tableName,$tagArray, $keyArray, function(){});
+                $result = UpdateStatusByTime::checkBetween($tableName,$tagArray, $keyArray, function(){});
                 break;
             case '3':
-                $result = TimeIntervalSelect::checkAfter($tableName,$tagArray, $keyArray, function(){});
+                $result = UpdateStatusByTime::checkAfter($tableName,$tagArray, $keyArray, function(){});
                 break;
         }
 

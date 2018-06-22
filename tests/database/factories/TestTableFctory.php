@@ -1,7 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
-use Ariby\TimeIntervalSelect\Models\TestTable;
+use Ariby\tests\database\Models\TestTable;
 
 $factory->define(TestTable::class, function (Faker $faker) {
     date_default_timezone_set('Asia/Taipei');

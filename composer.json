@@ -1,5 +1,5 @@
 {
-  "name": "ariby/time-interval-select",
+  "name": "ariby/update-status-by-time",
   "description": "This package help you to select data that are matched with your Input db column for different time interval.",
   "type": "library",
   "license": "MIT",
@@ -22,7 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Ariby\\TimeIntervalSelect\\": "src/"
+      "Ariby\\UpdateStatusByTime\\": "src/"
     }
   },
   "autoload-dev": {
@@ -37,7 +37,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Ariby\\TimeIntervalSelect\\TimeIntervalServiceProvider"
+        "Ariby\\UpdateStatusByTime\\UpdateStatusByTimeServiceProvider"
       ],
       "aliases": {
       }

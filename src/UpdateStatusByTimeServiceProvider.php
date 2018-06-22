@@ -1,11 +1,11 @@
 <?php
 
-namespace Ariby\TimeIntervalSelect;
+namespace Ariby\UpdateStatusByTime;
 
 use Illuminate\Support\ServiceProvider;
-use Ariby\TimeIntervalSelect\Commands\GetSatisfyIDs;
+use Ariby\UpdateStatusByTime\Commands\GetSatisfyIDs;
 
-class TimeIntervalServiceProvider extends ServiceProvider
+class UpdateStatusByTimeServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.

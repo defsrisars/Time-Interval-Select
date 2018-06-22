@@ -1,11 +1,11 @@
 <?php
 
-namespace Ariby\TimeIntervalSelect;
+namespace Ariby\UpdateStatusByTime;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class TimeIntervalSelect
+class UpdateStatusByTime
 {
     /**
      * constructor.

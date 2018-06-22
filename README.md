@@ -35,33 +35,20 @@
     再配合 Laravel 的排程使用，便可以使程式依自已所需要的頻率，"定期的自動更新維護 table 資訊"
 
 ## 安裝
-因為此套件是公開版控庫，但是因為沒有上傳至 packgist，如果要安裝此 package 的專案，必需在自己的 composer.json 先定義版控庫來源
+可以透過下列指令進行安裝
 
-    // composer.json
-    
-    ...(略)...
-    "repositories": [
-      {
-        "type": "git",
-        "url": "https://github.com/defsrisars/Time-Interval-Select.git"
-      }
-    ],
-    ...(略)...
-
-接著就可以透過下列指令進行安裝
-
-    composer require Ariby/Time-Interval-Select
+    composer require ariby/update-status-by-time
     
 並在config/app.php加上Provider
 
     'providers' => [
         ...
-        Ariby\TimeIntervalSelect\TimeIntervalServiceProvider::class,
+        Ariby\UpdateStatusByTime\UpdateStatusByTimeServiceProvider::class,
     ],    
     
 然後在要使用的地方上方，加上下方程式碼做 include
 
-	use Ariby\TimeIntervalSelect\TimeIntervalSelect;
+	use Ariby\UpdateStatusByTime\UpdateStatusByTime;
 
 ## 使用方法
 
@@ -89,7 +76,7 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
 
 #### checkBefore
 
-    TimeIntervalSelect::checkBefore("movies",
+    UpdateStatusByTime::checkBefore("movies",
     ['status' => '未上映'], 
     array('primaryKey'=>'id', 'start_at'=>'startTime'),
     function($array){ ...do something what you want to do });
@@ -104,7 +91,7 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
 
 #### checkBetween
 
-    $result = TimeIntervalSelect::checkBetween("movies",
+    $result = UpdateStatusByTime::checkBetween("movies",
     ['status' => '上映中'], 
     array('primaryKey'=>'id', 'start_at'=>'startTime', 'end_at' => 'endTime'),
     function($array){ ...do something what you want to do });
@@ -120,7 +107,7 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
     
 #### checkAfter
 
-    $result = TimeIntervalSelect::checkAfter("movies",
+    $result = UpdateStatusByTime::checkAfter("movies",
     ['status' => '已下檔'], 
     array('primaryKey'=>'id', 'end_at' => 'endTime'),
     function($array){ ...do something what you want to do });
@@ -223,7 +210,7 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
     use Illuminate\Console\Command;
     
     use App\Models\Movies;
-    use Ariby\TimeIntervalSelect\TimeIntervalSelect;
+    use Ariby\UpdateStatusByTime\UpdateStatusByTime;
     
     class UpdateMoviesStatus extends Command
     {
@@ -242,19 +229,19 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
         public function handle()
         {
             /* before-檢查未上映的電影並更新 */
-            TimeIntervalSelect::checkBefore("movies",['status' => '未上映'], array('primaryKey'=>'id', 'start_at'=>'startTime'), function($array){
+            UpdateStatusByTime::checkBefore("movies",['status' => '未上映'], array('primaryKey'=>'id', 'start_at'=>'startTime'), function($array){
                 if(!is_null($array))
                     Movies::whereIn('id', $array)->update(['status' => '未上映', 'stage' => 'Before']);
             });
     
             /* now-檢查上映中的電影並更新 */
-            TimeIntervalSelect::checkBetween("movies",['status' => '上映中'], array('primaryKey'=>'id', 'start_at'=>'startTime', 'end_at'=>'endTime'), function($array){
+            UpdateStatusByTime::checkBetween("movies",['status' => '上映中'], array('primaryKey'=>'id', 'start_at'=>'startTime', 'end_at'=>'endTime'), function($array){
                 if(!is_null($array))
                     Movies::whereIn('id', $array)->update(['status' => '上映中', 'stage' => 'Now']);
             });
     
             /* after-檢查已下檔的電影並更新 */
-            TimeIntervalSelect::checkAfter("movies",['status' => '已下檔'], array('primaryKey'=>'id', 'end_at'=>'endTime'), function($array){
+            UpdateStatusByTime::checkAfter("movies",['status' => '已下檔'], array('primaryKey'=>'id', 'end_at'=>'endTime'), function($array){
                 if(!is_null($array))
                     Movies::whereIn('id', $array)->update(['status' => '已下檔', 'stage' => 'After']);
             });

@@ -1,9 +1,9 @@
 <?php
 
-use Ariby\TimeIntervalSelect\Models\TestTable;
-use Ariby\TimeIntervalSelect\TimeIntervalSelect;
+use Ariby\tests\database\Models\TestTable;
+use Ariby\UpdateStatusByTime\UpdateStatusByTime;
 
-class TimeIntervalSelectTest extends BaseTestCase
+class UpdateStatusByTimeTest extends BaseTestCase
 {
 
     protected function setUp()
@@ -22,7 +22,7 @@ class TimeIntervalSelectTest extends BaseTestCase
         /* 製作假資料 */
         factory(TestTable::class,30)->create();
 
-        $result = TimeIntervalSelect::checkBefore("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at'), function($array){});
+        $result = UpdateStatusByTime::checkBefore("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at'), function($array){});
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -55,7 +55,7 @@ class TimeIntervalSelectTest extends BaseTestCase
         $test_data2->end_at = '2018-04-21 00:00:00';
         $test_data2->save();
 
-        $result = TimeIntervalSelect::checkBefore("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at','status'=>'status'), function($array){});
+        $result = UpdateStatusByTime::checkBefore("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at','status'=>'status'), function($array){});
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -65,7 +65,7 @@ class TimeIntervalSelectTest extends BaseTestCase
         /* 製作假資料 */
         factory(TestTable::class,30)->create();
 
-        $result = TimeIntervalSelect::checkBetween("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at', 'end_at' => 'end_at'), function($array){});
+        $result = UpdateStatusByTime::checkBetween("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at', 'end_at' => 'end_at'), function($array){});
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -98,7 +98,7 @@ class TimeIntervalSelectTest extends BaseTestCase
         $test_data2->end_at = '2018-04-21 00:00:00';
         $test_data2->save();
 
-        $result = TimeIntervalSelect::checkBetween("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at', 'end_at' => 'end_at'), function($array){});
+        $result = UpdateStatusByTime::checkBetween("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at', 'end_at' => 'end_at'), function($array){});
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -108,7 +108,7 @@ class TimeIntervalSelectTest extends BaseTestCase
         /* 製作假資料 */
         factory(TestTable::class,30)->create();
 
-        $result = TimeIntervalSelect::checkAfter("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'end_at'=>'end_at'), function($array){});
+        $result = UpdateStatusByTime::checkAfter("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'end_at'=>'end_at'), function($array){});
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -141,7 +141,7 @@ class TimeIntervalSelectTest extends BaseTestCase
         $test_data2->end_at = '2018-04-11 00:00:00';
         $test_data2->save();
 
-        $result = TimeIntervalSelect::checkAfter("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'end_at'=>'end_at','status'=>'status'), function($array){});
+        $result = UpdateStatusByTime::checkAfter("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'end_at'=>'end_at','status'=>'status'), function($array){});
 
         $this->assertEquals($result['ok'], "true");
         $this->assertArrayHasKey('2' ,array_flip($result['data']));
