@@ -190,7 +190,6 @@ class UpdateStatusByTime
                 }
             }
         }
-        logger($sql_string);
 
         $sql_result = DB::select($sql_string);
         $answerIDs = array_column($sql_result, $pk);
