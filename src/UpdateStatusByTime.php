@@ -75,17 +75,25 @@ class UpdateStatusByTime
         $now = $datetime= date("Y-m-d H:i:s");
 
         /* 基本select */
-        $sql_string = "SELECT {$pk} FROM {$tableName} WHERE {$start_at} > '{$now}'";
+        $sql_string = "SELECT {$pk} FROM {$tableName} WHERE {$start_at} < '{$now}'";
         /* 加入tag限制 */
         foreach($tag as $key => $item){
             if(is_array($item)){
                 /* tag為複合陣列 表單一鍵值有多個條件 */
                 foreach($item as $column => $value){
-                    $sql_string = $sql_string." AND {$column} != '{$value}'";
+                    if(is_null($value)){
+                        $sql_string = $sql_string." AND {$column} IS NOT NULL";
+                    }else{
+                        $sql_string = $sql_string." AND {$column} != '{$value}'";
+                    }
                 }
             }else{
                 /* tag為字串 表單一鍵值只有一個條件 */
-                $sql_string = $sql_string." AND {$key} != '{$tag[$key]}'";
+                if(is_null($item)){
+                    $sql_string = $sql_string." AND {$key} IS NOT NULL";
+                }else{
+                    $sql_string = $sql_string." AND {$key} != '{$item}'";
+                }
             }
         }
         $sql_result = DB::select($sql_string);
@@ -167,13 +175,23 @@ class UpdateStatusByTime
             if(is_array($item)){
                 /* tag為複合陣列 表單一鍵值有多個條件 */
                 foreach($item as $column => $value){
-                    $sql_string = $sql_string." AND {$column} != '{$value}'";
+                    if(is_null($value)){
+                        $sql_string = $sql_string." AND {$column} IS NOT NULL";
+                    }else{
+                        $sql_string = $sql_string." AND {$column} != '{$value}'";
+                    }
                 }
             }else{
                 /* tag為字串 表單一鍵值只有一個條件 */
-                $sql_string = $sql_string." AND {$key} != '{$tag[$key]}'";
+                if(is_null($item)){
+                    $sql_string = $sql_string." AND {$key} IS NOT NULL";
+                }else{
+                    $sql_string = $sql_string." AND {$key} != '{$item}'";
+                }
             }
         }
+        logger($sql_string);
+
         $sql_result = DB::select($sql_string);
         $answerIDs = array_column($sql_result, $pk);
 
@@ -246,11 +264,19 @@ class UpdateStatusByTime
             if(is_array($item)){
                 /* tag為複合陣列 表單一鍵值有多個條件 */
                 foreach($item as $column => $value){
-                    $sql_string = $sql_string." AND {$column} != '{$value}'";
+                    if(is_null($value)){
+                        $sql_string = $sql_string." AND {$column} IS NOT NULL";
+                    }else{
+                        $sql_string = $sql_string." AND {$column} != '{$value}'";
+                    }
                 }
             }else{
                 /* tag為字串 表單一鍵值只有一個條件 */
-                $sql_string = $sql_string." AND {$key} != '{$tag[$key]}'";
+                if(is_null($item)){
+                    $sql_string = $sql_string." AND {$key} IS NOT NULL";
+                }else{
+                    $sql_string = $sql_string." AND {$key} != '{$item}'";
+                }
             }
         }
         $sql_result = DB::select($sql_string);
