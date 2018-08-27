@@ -20,9 +20,19 @@ class UpdateStatusByTimeTest extends BaseTestCase
     public function testCheckBeforeSuccess_FakeData()
     {
         /* 製作假資料 */
-        factory(TestTable::class,30)->create();
+        factory(TestTable::class, 30)->create();
 
-        $result = UpdateStatusByTime::checkBefore("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at'), function($array){});
+        $result = UpdateStatusByTime::checkBefore("test_table",
+            [
+                [
+                    ['test1', '!=', 't1'],
+                    ['test2', '!=', 't2'],
+                    ['test3', '!=', 't3'],
+                ]
+            ],
+            array('primaryKey' => 'id', 'start_at' => 'start_at'),
+            function ($array) {
+            });
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -55,7 +65,18 @@ class UpdateStatusByTimeTest extends BaseTestCase
         $test_data2->end_at = '2018-04-21 00:00:00';
         $test_data2->save();
 
-        $result = UpdateStatusByTime::checkBefore("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at','status'=>'status'), function($array){});
+        $result = UpdateStatusByTime::checkBefore("test_table",
+            [
+                [
+                    ['test1', '!=', 't1'],
+                    ['test2', '!=', 't2'],
+                    ['test3', '!=', 't3'],
+                ]
+            ],
+            array('primaryKey' => 'id', 'start_at' => 'start_at', 'status' => 'status'),
+            function ($array) {
+            }
+        );
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -63,9 +84,20 @@ class UpdateStatusByTimeTest extends BaseTestCase
     public function testcheckBetweenSuccess_FakeData()
     {
         /* 製作假資料 */
-        factory(TestTable::class,30)->create();
+        factory(TestTable::class, 30)->create();
 
-        $result = UpdateStatusByTime::checkBetween("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at', 'end_at' => 'end_at'), function($array){});
+        $result = UpdateStatusByTime::checkBetween("test_table",
+            [
+                [
+                    ['test1', '!=', 't1'],
+                    ['test2', '!=', 't2'],
+                    ['test3', '!=', 't3'],
+                ]
+            ],
+            array('primaryKey' => 'id', 'start_at' => 'start_at', 'end_at' => 'end_at'),
+            function ($array) {
+            }
+        );
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -98,7 +130,18 @@ class UpdateStatusByTimeTest extends BaseTestCase
         $test_data2->end_at = '2018-04-21 00:00:00';
         $test_data2->save();
 
-        $result = UpdateStatusByTime::checkBetween("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'start_at'=>'start_at', 'end_at' => 'end_at'), function($array){});
+        $result = UpdateStatusByTime::checkBetween("test_table",
+            [
+                [
+                    ['test1', '!=', 't1'],
+                    ['test2', '!=', 't2'],
+                    ['test3', '!=', 't3'],
+                ]
+            ],
+            array('primaryKey' => 'id', 'start_at' => 'start_at', 'end_at' => 'end_at'),
+            function ($array) {
+            }
+        );
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -106,9 +149,20 @@ class UpdateStatusByTimeTest extends BaseTestCase
     public function testCheckAfterSuccess_FakeData()
     {
         /* 製作假資料 */
-        factory(TestTable::class,30)->create();
+        factory(TestTable::class, 30)->create();
 
-        $result = UpdateStatusByTime::checkAfter("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'end_at'=>'end_at'), function($array){});
+        $result = UpdateStatusByTime::checkAfter("test_table",
+            [
+                [
+                    ['test1', '!=', 't1'],
+                    ['test2', '!=', 't2'],
+                    ['test3', '!=', 't3'],
+                ]
+            ],
+            array('primaryKey' => 'id', 'end_at' => 'end_at'),
+            function ($array) {
+            }
+        );
 
         $this->assertEquals($result['ok'], "true");
     }
@@ -141,9 +195,20 @@ class UpdateStatusByTimeTest extends BaseTestCase
         $test_data2->end_at = '2018-04-11 00:00:00';
         $test_data2->save();
 
-        $result = UpdateStatusByTime::checkAfter("test_table",['test1' => 't1', 'test2'=>'t2', 'test3'=>'t3'], array('primaryKey'=>'id', 'end_at'=>'end_at','status'=>'status'), function($array){});
+        $result = UpdateStatusByTime::checkAfter("test_table",
+            [
+                [
+                    ['test1', '!=', 't1'],
+                    ['test2', '!=', 't2'],
+                    ['test3', '!=', 't3'],
+                ]
+            ],
+            array('primaryKey' => 'id', 'end_at' => 'end_at', 'status' => 'status'),
+            function ($array) {
+            }
+        );
 
         $this->assertEquals($result['ok'], "true");
-        $this->assertArrayHasKey('2' ,array_flip($result['data']));
+        $this->assertArrayHasKey('2', array_flip($result['data']));
     }
 }

@@ -3,7 +3,6 @@
 namespace Ariby\UpdateStatusByTime;
 
 use Illuminate\Support\ServiceProvider;
-use Ariby\UpdateStatusByTime\Commands\GetSatisfyIDs;
 
 class UpdateStatusByTimeServiceProvider extends ServiceProvider
 {
@@ -19,7 +18,7 @@ class UpdateStatusByTimeServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
             // 註冊所有 commands
             $this->commands([
-                GetSatisfyIDs::class
+
             ]);
         }
     }

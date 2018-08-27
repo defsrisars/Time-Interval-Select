@@ -57,8 +57,15 @@
 
 	$tableName => 欲查詢的table名稱，以上例就是"movies"
 
-	$tag => Array，欲做比對的欄位與其值，以movis為例 => ['status' => '上映中']
-	['status' => ['上映中', '已下檔']]` // 相當於 `status != "上映中" && status != "已下檔"
+	$tag => Array，欲做比對的欄位與其值，以movis為例：
+	[
+	    [
+	        ['status', '!=', '上映中'],
+	        ['status', '!=', '已下檔']
+	    ]
+	]
+	// 相當於 where 條件 `status != "上映中" && status != "已下檔"
+	// 每個第二層陣列會以 () 括狐包住，第三層陣列為其中的條件
 
 	$columnName => Array，存入table中的column欄位名稱，實際格式如下
 	['primaryKey' => "table中欲回傳的欄位名稱，如id",
@@ -76,10 +83,19 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
 
 #### checkBefore
 
-    UpdateStatusByTime::checkBefore("movies",
-    ['status' => '未上映'], 
-    array('primaryKey'=>'id', 'start_at'=>'startTime'),
-    function($array){ ...do something what you want to do });
+    UpdateStatusByTime::checkBefore(
+        "movies",
+    	[
+    	    [
+    	        ['status', '!=', '未上映'],
+    	    ]
+    	], 
+        [
+            'primaryKey'=>'id',
+            'start_at'=>'startTime'
+        ],
+        function($array){ ...do something what you want to do }
+    );
 
 在 function 結束時，程式會自動將查詢結果帶入閉包函式執行，回傳結果如下：
 
@@ -91,10 +107,20 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
 
 #### checkBetween
 
-    $result = UpdateStatusByTime::checkBetween("movies",
-    ['status' => '上映中'], 
-    array('primaryKey'=>'id', 'start_at'=>'startTime', 'end_at' => 'endTime'),
-    function($array){ ...do something what you want to do });
+    $result = UpdateStatusByTime::checkBetween(
+        "movies",
+    	[
+    	    [
+    	        ['status', '!=', '上映中'],
+    	    ]
+    	], 
+        [
+            'primaryKey'=>'id',
+            'start_at'=>'startTime',
+            'end_at' => 'endTime'
+        ],
+        function($array){ ...do something what you want to do }
+    );
 
 在 function 結束時，程式會自動將查詢結果帶入閉包函式執行<br>
 回傳結果如：
@@ -107,10 +133,19 @@ $function => **為一閉包函式，應接收一陣列參數，會包含查詢�
     
 #### checkAfter
 
-    $result = UpdateStatusByTime::checkAfter("movies",
-    ['status' => '已下檔'], 
-    array('primaryKey'=>'id', 'end_at' => 'endTime'),
-    function($array){ ...do something what you want to do });
+    $result = UpdateStatusByTime::checkAfter(
+        "movies",
+    	[
+    	    [
+    	        ['status', '!=', '已下檔']
+    	    ]
+    	], 
+        [
+            'primaryKey'=>'id',
+            'end_at' => 'endTime'
+        ],
+        function($array){ ...do something what you want to do }
+    );
 
 在 function 結束時，程式會自動將查詢結果帶入閉包函式執行<br>
 回傳結果如：
@@ -162,23 +197,7 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
     
 ## 使用Artisan命令列做查詢
 
-在config/app.php加上服務提供者後，可直接以php artisan使用
-
-    \\ php artisan可看到
-    TimeSelect:getSatisfyIDs    {tableName : The name of table.}
-                           {method : 1:before, 2:now, 3:after}
-                           {primaryKey : The column you want to return after search.}
-                           {beforeTimeKey : The column name in the database.}
-                           {afterTimeKey : The column name in the database.}
-                           {tagArray* : The rule that you want to set. The first parameter is key, and after is value. e.g. send "status false tag error" means ["staus" => "false", "tag" => "error"]}
-    
-以下為使用範例：
-    
-    // 輸入指令
-    php artisan TimeSelect:getSatisfyIDs movies 2 id startTime endTime status 未上映
-    // 回傳Number為滿足條件的row數量、result為滿足的id們，以" ,"為分隔符
-    Number: 1
-    result: 3
+待補
     
 ## 配合Laravel排程使用
 可以參考 [Laravel 官方文件](https://docs.laravel-dojo.com/laravel/5.5/scheduling)<br>
@@ -229,22 +248,58 @@ function 會自動執行閉包函式，並將查詢結果之 id 陣列以參數�
         public function handle()
         {
             /* before-檢查未上映的電影並更新 */
-            UpdateStatusByTime::checkBefore("movies",['status' => '未上映'], array('primaryKey'=>'id', 'start_at'=>'startTime'), function($array){
+            UpdateStatusByTime::checkBefore(
+                "movies",
+                [
+                    [
+                        ['status', '!=', '未上映']
+                    ]
+                ], 
+                [
+                    'primaryKey'=> 'id',
+                    'start_at'=> 'startTime'
+                ], 
+                function($array){
                 if(!is_null($array))
                     Movies::whereIn('id', $array)->update(['status' => '未上映', 'stage' => 'Before']);
-            });
+                }
+            );
     
             /* now-檢查上映中的電影並更新 */
-            UpdateStatusByTime::checkBetween("movies",['status' => '上映中'], array('primaryKey'=>'id', 'start_at'=>'startTime', 'end_at'=>'endTime'), function($array){
+            UpdateStatusByTime::checkBetween(
+                "movies",
+                [
+                    [
+                        ['status', '!=', '上映中']
+                    ]
+                ], 
+                [
+                    'primaryKey'=>'id',
+                    'start_at'=>'startTime',
+                    'end_at'=>'endTime', 
+                ],
+                function($array){
                 if(!is_null($array))
                     Movies::whereIn('id', $array)->update(['status' => '上映中', 'stage' => 'Now']);
-            });
+                }
+            );
     
             /* after-檢查已下檔的電影並更新 */
-            UpdateStatusByTime::checkAfter("movies",['status' => '已下檔'], array('primaryKey'=>'id', 'end_at'=>'endTime'), function($array){
+            UpdateStatusByTime::checkAfter(
+                [
+                    [
+                        ['status', '!=', '已下檔']
+                    ]
+                ], 
+                [
+                    'primaryKey'=>'id',
+                    'end_at'=>'endTime'
+                ],
+                function($array){
                 if(!is_null($array))
                     Movies::whereIn('id', $array)->update(['status' => '已下檔', 'stage' => 'After']);
-            });
+                }
+            );
         }
     }
     
