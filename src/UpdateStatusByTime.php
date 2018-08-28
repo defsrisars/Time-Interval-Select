@@ -70,7 +70,7 @@ class UpdateStatusByTime
         $now = $datetime = date("Y-m-d H:i:s");
 
         /* 基本select */
-        $sql_string = "SELECT {$pk} FROM {$tableName} WHERE {$start_at} < '{$now}'";
+        $sql_string = "SELECT {$pk} FROM {$tableName} WHERE {$start_at} > '{$now}'";
         /* 加入tag限制 */
         foreach ($tag as $index => $group) {
             $sql_string = $sql_string . ' AND (';
